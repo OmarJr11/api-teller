@@ -9,13 +9,13 @@ export class StoriesResolver {
   constructor(private readonly storiesService: StoriesService) {}
 
   @Mutation(() => Story)
-  createStory(@Args('createStoryInput') createStoryInput: CreateStoryInput) {
-    return this.storiesService.create(createStoryInput);
+  async createStory(@Args('createStoryInput') createStoryInput: CreateStoryInput) {
+    return await this.storiesService.createStory(createStoryInput);
   }
 
   @Query(() => [Story], { name: 'stories' })
-  findAll() {
-    return this.storiesService.findAll();
+  async findAll() {
+    return await this.storiesService.findAll();
   }
 
   @Query(() => Story, { name: 'story' })

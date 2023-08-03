@@ -10,7 +10,7 @@ export class Role {
   @Field(() => ID)
   id: number;
 
-  @Column('character varying', { name: 'name', length: 150 })
+  @Column('character varying', { name: 'name', length: 50, unique: true })
   @Field()
   name: string;
 

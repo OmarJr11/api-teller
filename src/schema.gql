@@ -4,12 +4,12 @@
 
 type RefreshToken {
   idUser: Int!
-  user: User!
   token: String!
   refresh: String!
-  role: String!
+  idRole: String!
   expire: DateTime!
   creationDate: DateTime!
+  user: User!
 }
 
 """
@@ -17,39 +17,13 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type User {
-  id: ID!
-  username: String!
-  firstName: String!
-  lastName: String!
-  image: Int
-  password: String!
-  email: String!
-  status: String!
-  creationDate: DateTime!
-  refreshTokens: [RefreshToken!]!
-}
-
 type File {
   filename: String!
   url: String!
   extension: String!
   creator: Int!
   creationDate: DateTime!
-}
-
-type Story {
-  id: ID!
-  title: String!
-  text: String!
-  like: Int!
-  image: Int!
-  file: File!
-  status: String!
-  creationDate: DateTime!
-  creator: Int!
-  modifier: Int!
-  modificationDate: DateTime!
+  user: User!
 }
 
 type Comment {
@@ -62,12 +36,81 @@ type Comment {
   modifier: Int!
   creationDate: DateTime!
   modificationDate: DateTime!
+  story: Story!
+  user: User!
+}
+
+type Story {
+  id: ID!
+  title: String!
+  text: String!
+  like: Int!
+  status: String!
+  creationDate: DateTime!
+  creator: Int!
+  modifier: Int!
+  modificationDate: DateTime!
+  user: User!
+  file: File!
+  comments: [Comment!]!
+}
+
+type Role {
+  id: ID!
+  name: String!
+  status: String!
+  creationDate: DateTime!
+  creator: Int!
+  modifier: Int!
+  modificationDate: DateTime!
+  user: User!
+  userRoles: [UserRole!]!
+}
+
+type UserRole {
+  id: ID!
+  idRole: Int!
+  idUser: Int!
+  status: String!
+  creationDate: DateTime!
+  creator: Int!
+  modifier: Int!
+  modificationDate: DateTime!
+  user: User!
+  role: Role!
+}
+
+type User {
+  id: ID!
+  username: String!
+  firstName: String!
+  lastName: String!
+  image: Int
+  password: String!
+  email: String!
+  status: String!
+  creationDate: DateTime!
+  story: [Story!]!
+  comments: [Comment!]!
+  refreshTokens: [RefreshToken!]!
+  userRoles: [UserRole!]!
+}
+
+type Permission {
+  id: ID!
+  name: String!
+  type: String!
+  status: String!
+  creationDate: DateTime!
+  creator: Int!
+  modifier: Int!
+  modificationDate: DateTime!
+  user: User!
 }
 
 type Query {
   findAll: [User!]!
   user(id: Int!): User!
-  refreshToken(id: Int!): RefreshToken!
   stories: [Story!]!
   story(id: Int!): Story!
   files: [File!]!
@@ -80,9 +123,6 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
-  createRefreshToken(createRefreshTokenInput: CreateRefreshTokenInput!): RefreshToken!
-  updateRefreshToken(updateRefreshTokenInput: UpdateRefreshTokenInput!): RefreshToken!
-  removeRefreshToken(id: Int!): RefreshToken!
   createStory(createStoryInput: CreateStoryInput!): Story!
   updateStory(updateStoryInput: UpdateStoryInput!): Story!
   removeStory(id: Int!): Story!
@@ -105,25 +145,20 @@ input UpdateUserInput {
   id: Int!
 }
 
-input CreateRefreshTokenInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateRefreshTokenInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
 input CreateStoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Story Title"""
+  title: String!
+
+  """Story Text"""
+  text: String!
 }
 
 input UpdateStoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  """Story Title"""
+  title: String
+
+  """Story Text"""
+  text: String
   id: Int!
 }
 
