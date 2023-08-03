@@ -17,11 +17,7 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    console.log('aqui');
-    
     const users = await this.userRepository.find();
-    console.log(users);
-    
     return users;
   }
 

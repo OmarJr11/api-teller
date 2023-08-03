@@ -23,10 +23,6 @@ export class Story {
   @Field(() => Int)
   like?: number;
 
-  @Column('int8', { name: 'image'})
-  @Field(() => Int)
-  image: number;
-
   @Column('character varying', { name: 'status', length: 50 })
   @Field()
   status: string;
