@@ -9,27 +9,27 @@ export class CommentsResolver {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Mutation(() => Comment)
-  createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput) {
-    return this.commentsService.create(createCommentInput);
+  async createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput) {
+    return await this.commentsService.create(createCommentInput);
   }
 
   @Query(() => [Comment], { name: 'comments' })
-  findAll() {
-    return this.commentsService.findAll();
+  async findAll() {
+    return await this.commentsService.findAll();
   }
 
   @Query(() => Comment, { name: 'comment' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.findOne(id);
+  async findOne(@Args('id', { type: () => Int }) id: number) {
+    return await this.commentsService.findOne(id);
   }
 
   @Mutation(() => Comment)
-  updateComment(@Args('updateCommentInput') updateCommentInput: UpdateCommentInput) {
-    return this.commentsService.update(updateCommentInput.id, updateCommentInput);
+  async updateComment(@Args('updateCommentInput') updateCommentInput: UpdateCommentInput) {
+    return await this.commentsService.update(updateCommentInput);
   }
 
   @Mutation(() => Comment)
-  removeComment(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.remove(id);
+  async removeComment(@Args('id', { type: () => Int }) id: number) {
+    return await this.commentsService.remove(id);
   }
 }

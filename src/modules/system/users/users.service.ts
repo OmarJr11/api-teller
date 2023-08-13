@@ -17,7 +17,7 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    const users = await this.userRepository.find();
+    const users = await this.userRepository.find({ order: { creationDate: "DESC", } });
     return users;
   }
 

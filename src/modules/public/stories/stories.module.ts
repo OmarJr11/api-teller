@@ -8,6 +8,7 @@ import { Story } from './entities/story.entity';
   imports: [
     TypeOrmModule.forFeature([Story])
   ],
-  providers: [StoriesResolver, StoriesService]
+  providers: [StoriesResolver, StoriesService],
+  exports: [StoriesService],
 })
 export class StoriesModule {}
