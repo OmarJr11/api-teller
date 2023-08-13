@@ -174,12 +174,18 @@ input UpdateFileInput {
 }
 
 input CreateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Story id"""
+  idStory: Int!
+
+  """Comment Text"""
+  text: String!
 }
 
 input UpdateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  """Story id"""
+  idStory: Int
+
+  """Comment Text"""
+  text: String
   id: Int!
 }

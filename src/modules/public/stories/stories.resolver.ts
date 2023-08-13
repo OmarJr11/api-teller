@@ -19,17 +19,17 @@ export class StoriesResolver {
   }
 
   @Query(() => Story, { name: 'story' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.storiesService.findOne(id);
+  async findOne(@Args('id', { type: () => Int }) id: number) {
+    return await this.storiesService.findOne(id);
   }
 
   @Mutation(() => Story)
-  updateStory(@Args('updateStoryInput') updateStoryInput: UpdateStoryInput) {
-    return this.storiesService.update(updateStoryInput.id, updateStoryInput);
+  async updateStory(@Args('updateStoryInput') updateStoryInput: UpdateStoryInput) {
+    return await this.storiesService.update(updateStoryInput);
   }
 
   @Mutation(() => Story)
-  removeStory(@Args('id', { type: () => Int }) id: number) {
-    return this.storiesService.remove(id);
+  async removeStory(@Args('id', { type: () => Int }) id: number) {
+    return await this.storiesService.remove(id);
   }
 }
