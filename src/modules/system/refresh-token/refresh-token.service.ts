@@ -58,9 +58,9 @@ export class RefreshTokenService {
    * Generate Token to header requests
    *
    * @param {*} user - Logged user
-   * @returns {Promise<{ token: string, refresh: string }>}
+   * @returns {Promise<{ token: string, refresh: string, user: User }>}
    */
-  async generateToken(user: User): Promise<{ token: string, refresh: string }> {
+  async generateToken(user: User): Promise<{ token: string, refresh: string, user: User }> {
       const data = {
         username: user.username,
         email: user.email,
@@ -78,8 +78,12 @@ export class RefreshTokenService {
       const expire = new Date();
       expire.setMonth(expire.getMonth() + 1);
   
-      await this.refreshTokenRepository.save({ token, refresh, expire, idUser: user.id });
-  
-      return { token, refresh };
+      await this.refreshTokenRepository.save(
+        { token, refresh, expire, idUser: user.id }
+      ).catch(() => {
+        throw new InternalServerErrorException('Ha ocurrido un error, intente de nuevo')
+      });
+      
+      return { token, refresh, user };
   }
 }
