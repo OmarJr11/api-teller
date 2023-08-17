@@ -18,11 +18,11 @@ export class StoriesService {
    * @returns {Promise<Story>}
    */
   async createStory(data: CreateStoryInput): Promise<Story> {    
-    if(!data.text ||!data.title) {
+    if(!data.text || !data.title) {
       throw new ForbiddenException('Title and text must be exist');
     }
     const story = await this.storyRepository.save(
-      {...data, status: 'Activate'}
+      {...data, status: 'Active'}
     ).catch(() => {
       throw new InternalServerErrorException('Ha ocurrido un error, intente de nuevo')
     });

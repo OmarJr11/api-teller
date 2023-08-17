@@ -1,8 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
 import { StoriesService } from './stories.service';
 import { Story } from './entities/story.entity';
 import { CreateStoryInput } from './dto/create-story.input';
 import { UpdateStoryInput } from './dto/update-story.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../../modules/system/auth/jwt-auth.guard';
+import { UserDec } from '../../../common/decorators/user.decorator';
+import { IUserReq } from '../../../common/interfaces/user-req.interface';
 
 @Resolver(() => Story)
 export class StoriesResolver {

@@ -25,7 +25,7 @@ export class CommentsService {
     }
 
     const comment = await this.commentRepository.save(
-      {...data, status: 'Activate'}
+      {...data, status: 'Active'}
     ).catch(() => {
       throw new InternalServerErrorException('Ha ocurrido un error, intente de nuevo')
     });

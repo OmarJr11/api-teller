@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Role } from '../../roles/entities/role.entity';
 
@@ -47,7 +47,7 @@ export class UserRole {
   @Field(() => Date)
   modificationDate?: Date;
 
-  @ManyToOne(() => User, (user) => user.userRoles)
+  @OneToOne(() => User, (user) => user.userRole)
   @JoinColumn([{ name: 'id_user', referencedColumnName: 'id' }])
   @Field(() => User)
   user?: User;

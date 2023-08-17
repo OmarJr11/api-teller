@@ -15,31 +15,12 @@ CREATE SCHEMA system;
 
 CREATE DOMAIN dec_nonnegative   DECIMAL(18,4) CHECK(VALUE >= 0.0000);
 
-
-CREATE TABLE system.files (
-    id          BIGSERIAL               NOT NULL,
-        
-    filename    VARCHAR(500)            NOT NULL,
-    url         VARCHAR(500)            NOT NULL,
-    extension   VARCHAR(100)            NOT NULL,
-
-    creator             BIGINT          NOT NULL,
-    creation_date       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    PRIMARY KEY(id),
-    UNIQUE(filename),
-    UNIQUE(url)
-);
-
 CREATE TABLE system.users (
     id                  BIGSERIAL       NOT NULL,
 
-    username            VARCHAR(100)    NOT NULL,
-    first_name          VARCHAR(50)     NOT NULL,
-    last_name           VARCHAR(50)     NOT NULL,
-    password            VARCHAR(100)    NULL,
+    username            VARCHAR(50)    NOT NULL,
+    password            VARCHAR(100)    NOT NULL,
     email               VARCHAR(100)    NOT NULL,
-    "image"             BIGINT          NULL,
     status              VARCHAR(50)     NOT NULL,
 
     creation_date       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -50,8 +31,7 @@ CREATE TABLE system.users (
     last_login          TIMESTAMP       NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (modifier)  REFERENCES system.users(id),
-    FOREIGN KEY ("image")   REFERENCES system.files(id)
+    FOREIGN KEY (modifier)  REFERENCES system.users(id)
 );
 
 CREATE UNIQUE INDEX users_email_uq ON system.users USING btree(lower(email)) WHERE status <> 'Deleted';
@@ -168,11 +148,22 @@ CREATE TABLE comments (
     FOREIGN KEY (modifier)          REFERENCES system.users(id)
 );
 
+CREATE TABLE like_stories (
+    id_story            BIGINT          NOT NULL,
+    status              VARCHAR(50)     NOT NULL,
+
+    creator             BIGINT          NULL,
+    creation_date       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (id_story, creator),
+    FOREIGN KEY (id_story)          REFERENCES public.stories(id),
+    FOREIGN KEY (creator)           REFERENCES system.users(id)
+);
+
 CREATE TABLE system.refresh_tokens(
     id_user             BIGINT          NOT NULL,
     token               VARCHAR(400)    NOT NULL,
     refresh             VARCHAR(400)    NOT NULL,
-    id_role             VARCHAR(50)     NOT NULL,
     expire              TIMESTAMP       NOT NULL,
 
     creation_date       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
