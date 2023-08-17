@@ -6,7 +6,6 @@ type RefreshToken {
   idUser: Int!
   token: String!
   refresh: String!
-  idRole: String!
   expire: DateTime!
   creationDate: DateTime!
   user: User!
@@ -83,17 +82,14 @@ type UserRole {
 type User {
   id: ID!
   username: String!
-  firstName: String!
-  lastName: String!
-  image: Int
-  password: String!
   email: String!
+  password: String!
   status: String!
   creationDate: DateTime!
   story: [Story!]!
   comments: [Comment!]!
   refreshTokens: [RefreshToken!]!
-  userRoles: [UserRole!]!
+  userRole: UserRole!
 }
 
 type Permission {
@@ -108,8 +104,25 @@ type Permission {
   user: User!
 }
 
+type LikeStory {
+  idStory: Int!
+  status: String!
+  creator: Int!
+  creationDate: DateTime!
+}
+
+type LoginResponse {
+  """Access Token"""
+  token: String!
+
+  """Access Refresh Token"""
+  refresh: String!
+
+  """User"""
+  user: User!
+}
+
 type Query {
-  findAll: [User!]!
   user(id: Int!): User!
   stories: [Story!]!
   story(id: Int!): Story!
@@ -117,6 +130,8 @@ type Query {
   file(id: Int!): File!
   comments: [Comment!]!
   comment(id: Int!): Comment!
+  likeStories: [LikeStory!]!
+  likeStory(id: Int!): LikeStory!
 }
 
 type Mutation {
@@ -132,17 +147,32 @@ type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   removeComment(id: Int!): Comment!
+  createLikeStory(createLikeStoryInput: CreateLikeStoryInput!): LikeStory!
+  updateLikeStory(updateLikeStoryInput: UpdateLikeStoryInput!): LikeStory!
+  removeLikeStory(id: Int!): LikeStory!
+  login(loginInput: CreateAuthInput!): LoginResponse!
+  refresh(refreshInput: RefreshInputDto!): LoginResponse!
 }
 
 input CreateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Username"""
+  username: String!
+
+  """Email"""
+  email: String!
+
+  """Password"""
+  password: String!
 }
 
 input UpdateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
   id: Int!
+
+  """Username"""
+  username: String!
+
+  """Email"""
+  email: String!
 }
 
 input CreateStoryInput {
@@ -188,4 +218,34 @@ input UpdateCommentInput {
   """Comment Text"""
   text: String
   id: Int!
+}
+
+input CreateLikeStoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateLikeStoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateAuthInput {
+  """Username"""
+  username: String!
+
+  """Password"""
+  password: String!
+}
+
+input RefreshInputDto {
+  """User id"""
+  idUser: Float!
+
+  """Token"""
+  token: String!
+
+  """Refresh"""
+  refresh: String!
 }

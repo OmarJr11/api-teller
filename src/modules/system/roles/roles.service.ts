@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,10 +9,10 @@ import { Repository } from 'typeorm';
 export class RolesService {
   constructor(
     @InjectRepository(Role)
-    private readonly userRepository: Repository<Role>,
+    private readonly roleRepository: Repository<Role>,
   ) { }
   
-  create(createRoleInput: CreateRoleInput) {
+  async create(createRoleInput: CreateRoleInput) {
     return 'This action adds a new role';
   }
 
@@ -20,9 +20,28 @@ export class RolesService {
     return `This action returns all roles`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(id: number): Promise<Role> {
+    const role = await this.roleRepository.findOneOrFail({
+      where: {
+        id,
+        status: 'Active'
+      }
+    }).catch(() => {
+      throw new InternalServerErrorException('Ha ocurrido un error, intente de nuevo')
+    })
+    return role;
   }
+
+  async findOneByName(name: string): Promise<Role> {
+    const role = await this.roleRepository.findOneOrFail({
+      where: {
+        name,
+        status: 'Active'
+      }
+    }).catch(() => {
+      throw new InternalServerErrorException('Ha ocurrido un error, intente de nuevo')
+    })
+    return role;  }
 
   update(id: number, updateRoleInput: UpdateRoleInput) {
     return `This action updates a #${id} role`;

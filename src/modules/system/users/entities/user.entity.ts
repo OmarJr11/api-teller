@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { RefreshToken } from '../../refresh-token/entities/refresh-token.entity';
 import { Story } from '../../../../modules/public/stories/entities/story.entity';
 import { Comment } from '../../../../modules/public/comments/entities/comment.entity';
@@ -12,29 +12,17 @@ export class User {
   @Field(() => ID)
   id: number;
 
-  @Column('character varying', { name: 'username', length: 100 })
+  @Column('character varying', { name: 'username', length: 50 })
   @Field()
   username: string;
-
-  @Column('character varying', { name: 'first_name', length: 50 })
-  @Field()
-  firstName: string;
-
-  @Column('character varying', { name: 'last_name', length: 50 })
-  @Field()
-  lastName: string;
-
-  @Column('int8', { name: 'image', nullable: true })
-  @Field(() => Int, { nullable: true })
-  image?: number;
-
-  @Column('character varying', { name: 'password', length: 100 })
-  @Field()
-  password: string;
 
   @Column('character varying', { name: 'email', length: 100 })
   @Field()
   email: string;
+
+  @Column('character varying', { name: 'password', length: 100,})
+  @Field()
+  password: string;
 
   @Column('character varying', { name: 'status', length: 50 })
   @Field()
@@ -60,7 +48,7 @@ export class User {
   @Field(() => [RefreshToken])
   refreshTokens?: RefreshToken[];
 
-  @OneToMany(() => UserRole, (userRole) => userRole.user)
-  @Field(() => [UserRole])
-  userRoles?: UserRole[];
+  @OneToOne(() => UserRole, (userRole) => userRole.user)
+  @Field(() => UserRole)
+  userRole: UserRole;
 }

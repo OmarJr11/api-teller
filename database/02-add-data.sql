@@ -6,8 +6,8 @@ select pg_terminate_backend(pid) from pg_stat_activity WHERE datname='teller_sto
 
 \encoding UTF8
 
-INSERT INTO system.users ( id, username, first_name, last_name, password, email, status ) 
-values(1, 'admin', 'admin', 'admin', '123456789', 'admin@delivery.com', 'Active');
+INSERT INTO system.users (id, username, password, email, status ) 
+values(1, 'admin', '123456789', 'admin@delivery.com', 'Active');
 
 INSERT INTO system.roles (id, name, status, creator) 
 values  (1, 'User', 'Active', 1),

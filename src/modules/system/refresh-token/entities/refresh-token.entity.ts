@@ -17,10 +17,6 @@ export class RefreshToken {
   @Field()
   refresh: string;
 
-  @Column('character varying', { name: 'id_role', length: 50 })
-  @Field()
-  idRole: string;
-
   @Column('timestamp without time zone', { name: 'expire' })
   @Field()
   expire: Date;
