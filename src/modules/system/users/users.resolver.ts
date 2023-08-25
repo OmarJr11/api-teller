@@ -3,6 +3,10 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { IUserReq } from '../../../common/interfaces/user-req.interface';
+import { UserDec } from '../../../common/decorators/user.decorator';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -11,6 +15,16 @@ export class UsersResolver {
   @Mutation(() => User)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return await this.usersService.create(createUserInput);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Query(() => User, { name: 'me' })
+  async me(@UserDec() user: IUserReq) {
+    if(user) {
+      return await this.usersService.findOneById(user.userId);
+    } else {
+      return null
+    }
   }
 
   @Query(() => User, { name: 'user' })

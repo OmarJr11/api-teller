@@ -35,9 +35,9 @@ export class Story {
   @Field(() => Date)
   creationDate?: Date | string;
 
-  @Column('int8', { name: 'creator', nullable: true, select: false })
+  @Column('int8', { name: 'creator', select: false })
   @Field(() => Int)
-  creator?: number;
+  creator: number;
 
   @Column('int8', { name: 'modifier', nullable: true, select: false })
   @Field(() => Int)
