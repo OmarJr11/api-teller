@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './entities/comment.entity';
 import { Not, Repository } from 'typeorm';
 import { StoriesService } from '../stories/stories.service';
+import { IUserReq } from 'src/common/interfaces/user-req.interface';
 
 @Injectable()
 export class CommentsService {
@@ -16,16 +17,17 @@ export class CommentsService {
   /**
    * Create Story
    * @param {CreateCommentInput} data - data to create
+   * @param {IUserReq} user - user logged
    * @returns {Promise<Comment>}
    */
-  async create(data: CreateCommentInput): Promise<Comment> {
+  async create(data: CreateCommentInput, user: IUserReq): Promise<Comment> {
     await this._storyService.findOne(data.idStory);
     if(!data.text || data.text.length < 3 ) {
       throw new ForbiddenException('Text must be exist');
     }
 
     const comment = await this.commentRepository.save(
-      {...data, status: 'Active'}
+      {...data, status: 'Active', creator: user.userId}
     ).catch(() => {
       throw new InternalServerErrorException('Ha ocurrido un error, intente de nuevo')
     });

@@ -3,14 +3,22 @@ import { CommentsService } from './comments.service';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { UpdateCommentInput } from './dto/update-comment.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/modules/system/auth/jwt-auth.guard';
+import { UserDec } from 'src/common/decorators/user.decorator';
+import { IUserReq } from 'src/common/interfaces/user-req.interface';
 
 @Resolver(() => Comment)
 export class CommentsResolver {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Mutation(() => Comment)
-  async createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput) {
-    return await this.commentsService.create(createCommentInput);
+  @UseGuards(JwtAuthGuard)
+  async createComment(
+    @Args('createCommentInput') createCommentInput: CreateCommentInput,
+    @UserDec() user: IUserReq
+  ) {
+    return await this.commentsService.create(createCommentInput, user);
   }
 
   @Query(() => [Comment], { name: 'comments' })

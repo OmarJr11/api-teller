@@ -4,7 +4,6 @@ import { RefreshToken } from './entities/refresh-token.entity';
 import { MoreThan, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { generateRandomCodeByLength } from '../../../common/helpers/generators.helper';
-import { ITokenGenerate } from './interfaces/token-generate.interface';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { RefreshInputDto } from '../auth/dto/refresh.input.dto';
@@ -22,7 +21,7 @@ export class RefreshTokenService {
    * @param {RefreshInputDto} refresh - User owner of the token
    * @returns {Promise<{ user: User, tokens: { token: string, refresh: string }}>} - Tokens Saved in database
    */
-  async refreshToken(refresh: RefreshInputDto): Promise<{ user: User; tokens: { token: string, refresh: string } }> {
+  async refreshToken(refresh: RefreshInputDto): Promise<{ token: string, refresh: string, user: User}> {
     const refreshToken = await this.refreshTokenRepository
       .findOneOrFail({
         where: {
@@ -37,9 +36,14 @@ export class RefreshTokenService {
           success: false,
           message: 'Unauthorized',
         });
-      });
+      });      
 
-    await this.refreshTokenRepository.remove(refreshToken);
+    await this.refreshTokenRepository.remove(refreshToken).catch(() => {
+      throw new UnauthorizedException({
+        success: false,
+        message: 'Unauthorized',
+      });
+    });
 
     const user = await this.userService.findOneById(refresh.idUser).catch(() => {
       throw new UnauthorizedException({
@@ -48,10 +52,7 @@ export class RefreshTokenService {
       });
     });
 
-    return {
-      user,
-      tokens: await this.generateToken(user),
-    };
+    return await this.generateToken(user);
   }
 
   /**

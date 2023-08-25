@@ -123,6 +123,7 @@ type LoginResponse {
 }
 
 type Query {
+  me: User!
   user(id: Int!): User!
   stories: [Story!]!
   story(id: Int!): Story!
@@ -241,7 +242,7 @@ input CreateAuthInput {
 
 input RefreshInputDto {
   """User id"""
-  idUser: Float!
+  idUser: Int!
 
   """Token"""
   token: String!

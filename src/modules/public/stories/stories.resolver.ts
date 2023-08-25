@@ -13,8 +13,12 @@ export class StoriesResolver {
   constructor(private readonly storiesService: StoriesService) {}
 
   @Mutation(() => Story)
-  async createStory(@Args('createStoryInput') createStoryInput: CreateStoryInput) {
-    return await this.storiesService.createStory(createStoryInput);
+  @UseGuards(JwtAuthGuard)
+  async createStory(
+    @Args('createStoryInput') createStoryInput: CreateStoryInput, 
+    @UserDec() user: IUserReq
+  ) {
+    return await this.storiesService.createStory(createStoryInput, user);
   }
 
   @Query(() => [Story], { name: 'stories' })
@@ -28,12 +32,20 @@ export class StoriesResolver {
   }
 
   @Mutation(() => Story)
-  async updateStory(@Args('updateStoryInput') updateStoryInput: UpdateStoryInput) {
-    return await this.storiesService.update(updateStoryInput);
+  @UseGuards(JwtAuthGuard)
+  async updateStory(
+    @Args('updateStoryInput') updateStoryInput: UpdateStoryInput,
+    @UserDec() user: IUserReq
+  ) {
+    return await this.storiesService.update(updateStoryInput, user);
   }
 
   @Mutation(() => Story)
-  async removeStory(@Args('id', { type: () => Int }) id: number) {
-    return await this.storiesService.remove(id);
+  @UseGuards(JwtAuthGuard)
+  async removeStory(
+    @Args('id', { type: () => Int }) id: number,
+    @UserDec() user: IUserReq
+  ) {
+    return await this.storiesService.remove(id, user);
   }
 }
