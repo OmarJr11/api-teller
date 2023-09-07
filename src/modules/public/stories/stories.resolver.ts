@@ -7,6 +7,7 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../modules/system/auth/jwt-auth.guard';
 import { UserDec } from '../../../common/decorators/user.decorator';
 import { IUserReq } from '../../../common/interfaces/user-req.interface';
+import { CreateLikeStoryInput } from '../like-stories/dto/create-like-story.input';
 
 @Resolver(() => Story)
 export class StoriesResolver {
@@ -38,6 +39,24 @@ export class StoriesResolver {
     @UserDec() user: IUserReq
   ) {
     return await this.storiesService.update(updateStoryInput, user);
+  }
+
+  @Mutation(() => Story)
+  @UseGuards(JwtAuthGuard)
+  async likeStory(
+    @Args('createLikeStoryInput') createLikeStoryInput: CreateLikeStoryInput,
+    @UserDec() user: IUserReq
+  ) {
+    return await this.storiesService.likeStory(createLikeStoryInput, user);
+  }
+
+  @Mutation(() => Story)
+  @UseGuards(JwtAuthGuard)
+  async unlikeStory(
+    @Args('createLikeStoryInput') createLikeStoryInput: CreateLikeStoryInput,
+    @UserDec() user: IUserReq
+  ) {
+    return await this.storiesService.unlikeStory(createLikeStoryInput, user);
   }
 
   @Mutation(() => Story)

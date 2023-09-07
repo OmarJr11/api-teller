@@ -3,6 +3,7 @@ import { File } from 'src/modules/system/files/entities/file.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Comment } from '../../comments/entities/comment.entity';
 import { User } from '../../../../modules/system/users/entities/user.entity';
+import { LikeStory } from '../../like-stories/entities/like-story.entity';
 
 @Entity('stories', { schema: 'public' })
 @ObjectType()
@@ -21,7 +22,7 @@ export class Story {
 
   @Column('int8', { name: 'like', default: 0 })
   @Field(() => Int)
-  like?: number;
+  like: number;
 
   @Column('character varying', { name: 'status', length: 50 })
   @Field()
@@ -35,7 +36,7 @@ export class Story {
   @Field(() => Date)
   creationDate?: Date | string;
 
-  @Column('int8', { name: 'creator', select: false })
+  @Column('int8', { name: 'creator' })
   @Field(() => Int)
   creator: number;
 
@@ -57,12 +58,11 @@ export class Story {
   @Field(() => User)
   user?: User;
 
-  @OneToOne(() => File, (file) => file.id)
-  @JoinColumn([{ name: 'image', referencedColumnName: 'id' }])
-  @Field(() => File)
-  file?: File;
-
   @OneToMany(() => Comment, (comment) => comment.story)
   @Field(() => [Comment])
   comments?: Comment[];
+
+  @OneToMany(() => LikeStory, (likeStory) => likeStory.story)
+  @Field(() => [LikeStory])
+  likes?: LikeStory[];
 }

@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Story } from '../../stories/entities/story.entity';
 
 @Entity('like_stories', { schema: 'public' })
 @ObjectType()
@@ -14,7 +15,7 @@ export class LikeStory {
 
   @Column('int8', { name: 'creator', primary: true})
   @Field(() => Int)
-  creator?: number;
+  creator: number;
 
   @Column('timestamp without time zone', {
     name: 'creation_date',
@@ -23,4 +24,9 @@ export class LikeStory {
   })
   @Field(() => Date)
   creationDate?: Date | string;
+
+  @ManyToOne(() => Story, (story) => story.likes)
+  @JoinColumn([{ name: 'id_story', referencedColumnName: 'id' }])
+  @Field(() => Story)
+  story?: Story;
 }
