@@ -26,6 +26,7 @@ import { RolePermission } from './modules/system/role-permissions/entities/role-
 import { Permission } from './modules/system/permissions/entities/permission.entity';
 import { LikeStoriesModule } from './modules/public/like-stories/like-stories.module';
 import { AuthModule } from './modules/system/auth/auth.module';
+import { LikeStory } from './modules/public/like-stories/entities/like-story.entity';
 
 require('dotenv').config();
 @Module({
@@ -51,6 +52,7 @@ require('dotenv').config();
         RolePermission,
         Story,
         Comment,
+        LikeStory,
       ],
       logging: true,
       synchronize: true

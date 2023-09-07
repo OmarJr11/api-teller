@@ -26,7 +26,7 @@ export class Comment {
   @Field()
   status: string;
 
-  @Column('int8', { name: 'creator', select: false })
+  @Column('int8', { name: 'creator' })
   @Field(() => Int)
   creator: number;
 

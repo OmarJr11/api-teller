@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 import { LikeStoriesService } from './like-stories.service';
-import { LikeStoriesResolver } from './like-stories.resolver';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { LikeStory } from './entities/like-story.entity';
 
 @Module({
-  providers: [LikeStoriesResolver, LikeStoriesService]
+  imports: [
+    TypeOrmModule.forFeature([LikeStory])
+  ],
+  providers: [LikeStoriesService],
+  exports: [LikeStoriesService],
 })
 export class LikeStoriesModule {}

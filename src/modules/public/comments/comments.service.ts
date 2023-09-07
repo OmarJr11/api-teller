@@ -88,10 +88,10 @@ export class CommentsService {
    */
   async remove(id: number): Promise<boolean> {
     const comment = await this.findOne(id);
-    await this.commentRepository.delete(
-      {id: comment.id}
+    await this.commentRepository.update(
+      { status: 'Deleted'}, comment
     ).catch(() => {
-        throw new InternalServerErrorException('Ha ocurrido un error, intente de nuevo')
+      throw new InternalServerErrorException('Ha ocurrido un error, intente de nuevo')
     });
     return true;
   }
